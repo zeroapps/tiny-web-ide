@@ -5,7 +5,7 @@
 # === configuration {
   define('PATH', realpath('/var/www/test'));
   define('TAB_SIZE', 2);
-  define('EDITABLE_MIME_REG', ['/text\/.+/', '/inode\/x-empty/']); # ("*"" is used to match any string)
+  define('EDITABLE_MIME_REG', ['/text\/.+/', '/inode\/x-empty/']);
 # } configuration ===
 
 
