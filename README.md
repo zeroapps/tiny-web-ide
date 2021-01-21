@@ -8,7 +8,7 @@ Minimal web single-script IDE based on PHP that can be easily integrated into an
 1. The idea is not to replace advanced IDEs/code-editors, but rather have in-place code editor to quickly build prototypes, test features and create micro apps.
 
 
-Screenshot goes here
+![IDE Screenshot](https://raw.githubusercontent.com/zeroapps/tiny-web-ide/main/docs/ide.png)
 
 
 ## Features
@@ -45,6 +45,17 @@ Edit list of editable files (each element in array is a regex of MIME types allo
 ```
 define('EDITABLE_MIME_REG', ['/text\/.+/', '/inode\/x-empty/']);
 ```
+
+## Usage
+### Creating files
+Just add "?p=new_file" to the address bar to create new_file. All new subdirectories will be created automatically:
+![IDE - create new file](https://raw.githubusercontent.com/zeroapps/tiny-web-ide/main/docs/ide_new_file.png)
+
+
+### Removing files
+In order to remove file double click on it in a file tree:
+![IDE - remove file](https://raw.githubusercontent.com/zeroapps/tiny-web-ide/main/docs/ide_remove_file.png)
+
 
 
 ## Technologies used
