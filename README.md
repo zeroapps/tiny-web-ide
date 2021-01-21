@@ -35,6 +35,11 @@ Open the file and set your directory with the code you want to edit:
   define('PATH', realpath('/var/www/test'));
 ```
 
+Point your web-server to process ide.php and open it in browser:
+```
+http://127.0.0.1/ide.php
+```
+
 ## Configuration
 Set the desired tab size:
 ```
