@@ -49,11 +49,13 @@ define('EDITABLE_MIME_REG', ['/text\/.+/', '/inode\/x-empty/']);
 ## Usage
 ### Creating files
 Just add "?p=new_file" to the address bar to create new_file. All new subdirectories will be created automatically:
+
 ![IDE - create new file](https://raw.githubusercontent.com/zeroapps/tiny-web-ide/main/docs/ide_new_file.png)
 
 
 ### Removing files
 In order to remove file double click on it in a file tree:
+
 ![IDE - remove file](https://raw.githubusercontent.com/zeroapps/tiny-web-ide/main/docs/ide_remove_file.png)
 
 
