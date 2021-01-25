@@ -31,8 +31,7 @@ wget https://raw.githubusercontent.com/zeroapps/tiny-web-ide/main/ide.php
 
 Open the file and set your directory with the code you want to edit:
 ```
-# === configuration {
-  define('PATH', realpath('/var/www/test'));
+define('PATH', realpath('/var/www/dir_with_code'));
 ```
 
 Point your web-server to process ide.php and open it in browser:
