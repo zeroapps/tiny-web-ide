@@ -13,7 +13,7 @@ Minimal web single-script IDE based on PHP that can be easily integrated into an
 
 ## Features
 1. File tree control based on predefined path.
-1. Edit any type of textual files (any known language).
+1. Edit any code/text file (any known coding language).
 1. Files are automatically synced with backend while being edited.
 1. Simple new files/dirs creation using browser address bar.
 1. It uses https://github.com/ajaxorg/ace as a code editor, so all the features included:
