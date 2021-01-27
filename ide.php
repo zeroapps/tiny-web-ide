@@ -6,7 +6,24 @@
   define('PATH', realpath('/var/www/test'));
   define('TAB_SIZE', 2);
   define('EDITABLE_MIME_REG', ['/text\/.+/', '/inode\/x-empty/']);
+  # define('LOGIN', 'developer');
+  # define('PASSWORD', 'changethis');
 # } configuration ===
+
+
+
+# === auth {
+if ( defined('LOGIN') && defined('PASSWORD') ) {
+	$allow = !empty($_SERVER['PHP_AUTH_USER']) && ($_SERVER['PHP_AUTH_USER'] == LOGIN ) &&
+	         !empty($_SERVER['PHP_AUTH_PW']) && ($_SERVER['PHP_AUTH_PW'] == PASSWORD );
+  
+  if ( !$allow ) {
+    header('HTTP/1.1 401 Authorization Required');
+		header('WWW-Authenticate: Basic realm="Access denied"');
+		exit;
+  }
+}
+# } auth ===
 
 
 
