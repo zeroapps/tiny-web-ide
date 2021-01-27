@@ -43,12 +43,18 @@ if ( defined('LOGIN') && defined('PASSWORD') ) {
     else {
       $writable = is_writable($file);
       $mime = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $file);
-      $editable = false;
-      foreach ( EDITABLE_MIME_REG as $mime_pattern ) {
-        if ( preg_match($mime_pattern, $mime) ) {
-          $code = file_get_contents($file);
-          $editable = true;
+      $editable = pathinfo($file, PATHINFO_EXTENSION) == 'txt';
+      
+      if ( !$editable ) {
+        foreach ( EDITABLE_MIME_REG as $mime_pattern ) {
+          if ( preg_match($mime_pattern, $mime) ) {
+            $editable = true;
+          }
         }
+      }
+      
+      if ( $editable ) {
+        $code = file_get_contents($file);
       }
 
       die( json_encode(['code' => $code, 'writable' => $writable, 'mime' => $mime, 'editable' => $editable]) );
@@ -126,7 +132,7 @@ if ( defined('LOGIN') && defined('PASSWORD') ) {
       
         #files                      { position: fixed; top: 0; width: 20%; left: 0; bottom: 0;
                                       margin: 0; padding: .5em 0 0 .9em; background: #202020; list-style: none;
-                                      color: #F8F8F2; box-sizing: border-box; }
+                                      color: #F8F8F2; box-sizing: border-box; overflow: auto; }
         #files ul                   { margin: 0; padding: 0 0 0 1em; list-style: none; display: none; border-left: 1px solid #333; }
         #files ul.open              { display: block; }
         
@@ -149,6 +155,18 @@ if ( defined('LOGIN') && defined('PASSWORD') ) {
                                       padding: 2px 6px; border-radius: 4px; opacity: 0.75; }
         #error i:hover              { opacity: 1; }
         
+        #search                     { position: fixed; top: 50%; left: 50%; width: 300px; height: 35px; margin-left: -150px;
+                                      margin-top: -17px; display: none; }
+        #search.on                  { display: block; }
+        #search input               { border: none; outline: none; width: 300px; height: 35px; padding: 1px 8px;
+                                      font-size: 18px; font-family: Roboto Mono, monospace; box-shadow: 0 0 8px #fff;
+                                      border-radius: 2px; }
+        #search ul                  { list-style: none; padding: 0; margin: 8px 0 0 0; }
+        #search ul li b             { color: yellow; }
+        #search ul li               { background: #000; padding: 6px 8px; color: #fff; opacity: 0.5; }
+        #search ul li.on,
+        #search ul li:hover         { background: #000; cursor: pointer; opacity: 1; }
+        
         #help                       { position: fixed; bottom: 1em; right: 1em; color: #fff; }
       </style>
     </head>
@@ -157,18 +175,19 @@ if ( defined('LOGIN') && defined('PASSWORD') ) {
       
       
       <?php /* Client code editor & navigation app { */ ?>
-        <form id="search">
-          
-        </form>
-        
         <ul id="files"><?=tree()?></ul>
         
         <div id="editor_container">
           <div id="editor"></div>
         </div>
         
+        <div id="search">
+          <input placeholder="Search files...">
+          <ul></ul>
+        </div>
+        
         <div id="error"></div>
-        <a id="help" target="_blank" href="https://github.com/zeroapps/tiny-web-ide">docs & code</a>
+        <a id="help" target="_blank" href="https://github.com/zeroapps/tiny-web-ide">help</a>
       <?php /* } */ ?>
       
       
@@ -210,7 +229,7 @@ if ( defined('LOGIN') && defined('PASSWORD') ) {
               var parent = file_element[0];
               while ( parent = $(parent).parent()[0] ) {
                 if ( $(parent).hasClass('dir') ) {
-                  $(parent).find('ul').addClass('open');
+                  $(parent).children('ul').addClass('open');
                 }
               }
             }
@@ -241,6 +260,65 @@ if ( defined('LOGIN') && defined('PASSWORD') ) {
               if ( confirm('Remove "' + file + '"?') ) {
                 location = location.pathname + '?r=' + file;
               }
+            });
+          }
+          
+          // code search listener
+          function init_search() {
+            $(document).on('keydown', function(e) {
+              if ( (e.ctrlKey || e.metaKey) && e.shiftKey && e.keyCode == 70 && !$('#search').hasClass('on') ) { // listen to "F" key
+                $('#search').addClass('on');
+                $('#search input').focus().select();
+              }
+            });
+            
+            $(document).on('blur', '#search input', function(e) {
+              setTimeout(function() {
+                $('#search').removeClass('on');
+              }, 200);
+            });
+            
+            $(document).on('keydown', '#search input', function(e) {
+              if ( e.keyCode == 13 ) {
+                if ( $('#search ul li.on')[0] ) {
+                  $('#files i[data-file="' + $('#search ul li.on').text() + '"]').click();
+                }
+              }
+              else if ( e.keyCode == 27 ) {
+                $('#search').removeClass('on');
+              }
+            });
+            
+            $(document).on('keyup', '#search input', function(e) {
+              
+              if ( e.keyCode == 40 ) {
+                var next = $('#search ul li.on').next()[0] || $('#search ul li')[0];
+                $('#search ul li.on').removeClass('on');
+                $(next).addClass('on');
+              }
+              else if ( e.keyCode == 38 ) {
+                var next = $('#search ul li.on').prev()[0] || $('#search ul li:last')[0];
+                $('#search ul li.on').removeClass('on');
+                $(next).addClass('on');
+              }
+              else {
+                var q = $(this).val();
+                var possible = [];
+                
+                if ( q != '' ) {
+                  $('#files i').each(function() {
+                    if ( ( possible.length < 10 ) && ($(this).data('file').indexOf(q) >= 0) ) {
+                      possible.push('<li>' + $(this).data('file').replace(q, '<b>' + q + '</b>') + '</li>');
+                    }
+                  });
+                }
+                
+                $('#search ul').html(possible.join(''));
+              }
+            });
+            
+            $(document).on('click', '#search ul li', function() {
+              $('#files i[data-file="' + $(this).text() + '"]').click();
             });
           }
           
@@ -357,6 +435,7 @@ if ( defined('LOGIN') && defined('PASSWORD') ) {
             init_tree();
             init_error(<?=json_encode($error)?>);
             init_default_file();
+            init_search();
           });
           
         </script>

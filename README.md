@@ -13,6 +13,7 @@ Minimal web single-script IDE based on PHP that can be easily integrated into an
 
 ## Features
 1. File tree control based on predefined path.
+1. File search.
 1. Edit any code/text file (any known coding language).
 1. Files are automatically synced with backend while being edited.
 1. Simple new files/dirs creation using browser address bar.
@@ -74,6 +75,11 @@ Just add "?p=new_file" to the address bar to create new_file. All new subdirecto
 In order to remove file double click on it in a file tree:
 
 ![IDE - remove file](https://raw.githubusercontent.com/zeroapps/tiny-web-ide/main/docs/ide_remove_file.png)
+
+### Searching files
+Press Ctrl + Shift + F (Cmd + Shift + F) to launch file search:
+
+![IDE - search file](https://raw.githubusercontent.com/zeroapps/tiny-web-ide/main/docs/ide_search.png)
 
 
 
