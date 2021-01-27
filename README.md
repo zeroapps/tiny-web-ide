@@ -31,6 +31,7 @@ wget https://raw.githubusercontent.com/zeroapps/tiny-web-ide/main/ide.php
 
 Open the file and set your directory with the code you want to edit:
 ```
+<?php
 define('PATH', realpath('/var/www/dir_with_code'));
 ```
 
@@ -40,14 +41,26 @@ http://127.0.0.1/ide.php
 ```
 
 ## Configuration
+
+Open ide.php in your code editor and right at the top of the file you'll find several configuration options.
+
 Set the desired tab size:
 ```
+<?php
 define('TAB_SIZE', 2);
 ```
 
 Edit list of editable files (each element in array is a regex of MIME types allowed to be edited):
 ```
+<?php
 define('EDITABLE_MIME_REG', ['/text\/.+/', '/inode\/x-empty/']);
+```
+
+Optionally uncomment and set login/password to enable basic authentication:
+```
+<?php
+define('LOGIN', 'developer');
+define('PASSWORD', 'changethis');
 ```
 
 ## Usage
